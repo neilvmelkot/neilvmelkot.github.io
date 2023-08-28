@@ -28,6 +28,8 @@
             z-index: -1; /* Place it behind the content */
         }
         
+        
+        
         /* General Styles */
         body {
             background-color: #000;
@@ -93,11 +95,25 @@
             padding-left: 15px;
             padding-right: 15px;
         }
+        
+        
+
+
+        <!-- Custom CSS -->
+    <style>
+        /* ... (your existing styles) ... */
+
+        /* Add media query for smaller screens */
+        @media (max-width: 768px) {
+            /* Adjust padding for sections to account for navigation bar height */
+            .resume-section {
+                padding-top: 100px; /* Adjust as needed */
+            }
+        }
     </style>
 </head>
 <body id="page-top">
-
-
+    
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-scarlet fixed-top" id="sideNav">
         <a class="navbar-brand js-scroll-trigger" href="#page-top">
