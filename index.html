@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neil Melkot - Developer</title>
+  <!-- Importing fonts: Montserrat for headers and Roboto for body text -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Host+Grotesk:ital,wght@0,300..800;1,300..800&family=Mona+Sans:ital,wght@0,200..900;1,200..900&family=Ramabhadra&display=swap" rel="stylesheet">
+  <!-- Font Awesome CDN for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background canvas for particle animation -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- Sliding Navigation Sidebar -->
+  <div id="side-nav" class="side-nav">
+    <a href="#about" class="nav-link">About</a>
+    <a href="#current" class="nav-link">Current Projects</a>
+    <a href="#past" class="nav-link">Past Projects</a>
+    <a href="#future" class="nav-link">Future Projects</a>
+    <a href="#papers" class="nav-link">Papers</a>
+    <a href="#contact" class="nav-link">Contact</a>
+  </div>
+
+  <!-- Hamburger Icon -->
+  <span id="open-nav" class="open-nav">&#9776;</span>
+
+  <header>
+    <div class="hero">
+      <!-- Profile Image -->
+      <img src="neilimage.jpg" alt="Neil Melkot" class="profile-image">
+      <h1>Neil Melkot</h1>
+      <p>Computer Science Undergraduate Student at Rutgers University</p>
+      <div class="hero-buttons">
+        <!-- Resume Download Button with PDF icon -->
+        <a href="Neil_Melkot_Resume_Experienced.pdf" target="_blank" class="download-btn resume-btn">
+          <i class="fa-solid fa-file-pdf"></i> Resume
+        </a>
+        <!-- LinkedIn Button with LinkedIn icon -->
+        <a href="https://www.linkedin.com/in/neilmelkot/" target="_blank" class="download-btn linkedin-btn">
+          <i class="fa-brands fa-linkedin"></i> LinkedIn
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <section id="about">
+      <h2>About Me</h2>
+      <div class="card">
+        <p>Hey, I'm Neil, a developer with experience in building/working with dynamic, secure, and innovative applications. I specialize in full‑stack development, data analysis, and software engineering.</p>
+        <h3>Education</h3>
+        <p>
+           <strong>Rutgers, The State University of New Jersey</strong><br>
+           Bachelor of Science in Computer Science &amp; Minor in Cognitive Science (Expected Fall 2025)<br>
+           GPA: 3.5/4.0
+        </p>
+        <p>
+           <strong>Raritan Valley Community College</strong><br>
+           Associate of Science in Environmental Science (May 2023)
+        </p>
+        <h3>Professional Experience</h3>
+        <p>
+          <strong>The Digital Group Inc – Software Engineer Intern</strong> (June 2024 – Aug. 2024)<br>
+          Developed scalable web applications using ASP.NET Core, React, C#, and CSS. Additionally, updated the Edit Candidate feature for ZRG Partners' recruitment platform, enabling dynamic management of candidate details in the CRM.
+        </p>        
+        <h3>Skills</h3>
+        <ul class="custom-list">
+          <li>Programming: C#, Java, JavaScript, Python, R, SQL, oCaml</li>
+          <li>Web Development: HTML, CSS, React</li>
+          <li>Data Analysis: JSON, Jupyter, MySQL, Rstudio</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="current">
+      <h2>Current Projects</h2>
+      <article class="card">
+        <h3>Bike Sharing Demand Analysis in Urban Areas</h3>
+        <p>This project investigates how weather conditions and local events affect bike‑sharing usage. It uses data analysis, visualization, and predictive modeling to forecast demand.</p>
+        <ul class="custom-list">
+          <li>Data Analysis &amp; Manipulation: Python, Pandas, NumPy, Jupyter</li>
+          <li>Data Visualization: Matplotlib, Seaborn</li>
+          <li>Predictive Modeling: Scikit‑Learn, TensorFlow</li>
+          <li>Data Acquisition: APIs (NOAA, OpenWeatherMap) and Web Scraping</li>
+        </ul>
+        <p>Access the full project proposal:</p>
+        <p>
+          <a href="intro_to_ds_project_proposal.pdf" target="_blank" class="download-btn">Download Proposal PDF</a>
+        </p>
+      </article>
+      <article class="card">
+        <h3>Ultimate 2D Shooter</h3>
+        <p>A 2D multiplayer shooter game developed in Unity with C#. It leverages Unity’s physics engine and networking capabilities for dynamic gameplay.</p>
+      </article>
+    </section>
+
+    <section id="past">
+      <h2>Past Projects</h2>
+      <article class="card">
+        <h3>Waite – Smart Drinking &amp; Safety Companion</h3>
+        <p>A full‑stack web application with an Express.js backend, React front end, and MongoDB for data storage. It integrates the Google Maps API and advanced speech‑to‑text conversion for real‑time analytics.</p>
+        <p>GitHub Repo: <a href="https://github.com/WhatCouldBe/WaiteProtected" target="_blank">https://github.com/WhatCouldBe/WaiteProtected</a></p>
+      </article>
+      <article class="card">
+        <h3>Email Verification System for Rutgers Discord Servers</h3>
+        <p>An automated email verification bot that streamlines user authentication and enhances server security using MongoDB.</p>
+        <p>Learn more: <a href="https://neilthought.medium.com/email-verification-system-for-discord-bots-5254a46a67bc" target="_blank">Email Verification System for Discord Bots</a></p>
+      </article>
+    </section>
+
+    <section id="future">
+      <h2>Future Projects</h2>
+      <article class="card">
+        <h3>Independent Study: QueensWay vs. QueensLink</h3>
+        <p>This project will compare two proposals for repurposing the abandoned Rockaway Beach Branch in Queens: converting it into a linear park (QueensWay) or reactivating the rail service (QueensLink). It will focus on cost, ridership, environmental impact, and community benefits.</p>
+        <p><strong>Technologies:</strong> Python, Pandas, NumPy, data visualization libraries, and simulation tools.</p>
+        <p>If you're interested in partnering on this project, please reach out!</p>
+      </article>
+    </section>
+
+    <!-- New Papers Section -->
+    <section id="papers">
+      <h2>Papers</h2>
+      <article class="card">
+        <h3>The Ghost in the Network</h3>
+        <p>A paper discussing the interplay between mind and machine, exploring how modern cognitive science rethinks consciousness in the age of technology.</p>
+        <p>
+          <a href="The_Ghost_in_the_Network.pdf" target="_blank" class="download-btn">Download PDF</a>
+        </p>
+      </article>
+      <article class="card">
+        <h3>Infant Social Cognition: Theory-Theory vs. Simulation Theory</h3>
+        <p>An exploration of how infants develop social cognition, contrasting the Theory-Theory approach with Simulation Theory through key developmental studies.</p>
+        <p>
+          <a href="Infant_Social_Cognition_Theory-Theory_vs_Simulation_Theory.pdf" target="_blank" class="download-btn">Download PDF</a>
+        </p>
+      </article>
+      <article class="card">
+        <h3>Phantom in the Neural Network</h3>
+        <p>A rethinking of the inner life through the lens of neural networks, examining the relationship between brain processes and subjective experience.</p>
+        <p>
+          <a href="Phantom_in_the_Neural_Network.pdf" target="_blank" class="download-btn">Download PDF</a>
+        </p>
+      </article>
+    </section>
+  </main>
+
+  <footer id="contact">
+    <h2>Contact</h2>
+    <p>Email: <a href="mailto:neil.melkot@rutgers.edu">neil.melkot@rutgers.edu</a></p>
+    <p>LinkedIn: <a href="https://www.linkedin.com/in/neilmelkot/" target="_blank">Neil Melkot</a></p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
