@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MUDA – Master Plan Library</title>
+
+  <link rel="icon" type="image/png" href="Royal_coat_of_arms_of_the_Kingdom_of_Mysore.svg.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="muda.css" />
+</head>
+<body class="dark">
+
+  <header class="app-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="muda.html">
+        <span class="crest"></span><strong>MUDA Explorer</strong>
+      </a>
+      <button class="nav-toggle" aria-label="Toggle menu"></button>
+      <nav class="app-nav">
+        <a href="muda.html#map" class="nav-link">Map</a>
+        <a href="muda.html#quick-links" class="nav-link">Quick Links</a>
+        <a href="muda-library.html" class="nav-link active">Library</a>
+        <a class="nav-link pill" href="https://www.mudamysore.gov.in/" target="_blank" rel="noopener">MUDA Website</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="panel">
+      <div class="panel-header">
+        <h2>Master Plan Library</h2>
+      </div>
+
+      <!-- Filter chips (white text; All selected by default) -->
+      <div class="filters" role="tablist" aria-label="Library filters">
+        <button class="chip active" data-filter="all" role="tab" aria-selected="true">All</button>
+        <button class="chip" data-filter="pd" role="tab" aria-selected="false">Planning Districts</button>
+        <button class="chip" data-filter="zoning" role="tab" aria-selected="false">Zoning Map</button>
+        <button class="chip" data-filter="plu" role="tab" aria-selected="false">Proposed Land Use</button>
+        <button class="chip" data-filter="circ" role="tab" aria-selected="false">Proposed Circulation</button>
+        <button class="chip" data-filter="report" role="tab" aria-selected="false">Report</button>
+      </div>
+
+      <div id="library-grid" class="grid-3" aria-live="polite"></div>
+    </section>
+  </main>
+
+  <!-- PDF modal -->
+  <div id="pdf-modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content" role="dialog" aria-modal="true">
+      <button class="modal-close" aria-label="Close">✕</button>
+      <iframe id="pdf-frame" title="PDF preview"></iframe>
+    </div>
+  </div>
+
+  <!-- Inline module script: data + render + filters + modal -->
+  <script type="module">
+    // --- data ---------------------------------------------------------------
+    const links = [
+      "https://drive.google.com/file/d/1CwXegkFFHavDpVh1Ysb8I2ws6QupEEg0/view?usp=drive_link",
+      "https://drive.google.com/file/d/1Y-w9i8B0oXJsoRvRpt_P0ktu8YRnmvVf/view?usp=drive_link",
+      "https://drive.google.com/file/d/1hphPnTYWJK1zVG0DfYAGib_82c4BTdGm/view?usp=drive_link",
+      "https://drive.google.com/file/d/1GVEnmNLQAJxI3TfV8F5ty5Esfw8Fa7jd/view?usp=drive_link",
+      "https://drive.google.com/file/d/1HEj0E9BCpAAeQ0iZy2Vn6-HeekxK9LI1/view?usp=drive_link",
+      "https://drive.google.com/file/d/1J8w9t9-iVsfNvnRspAPN5sykszFQIKZo/view?usp=drive_link",
+      "https://drive.google.com/file/d/1C5h4iZlzSHO29Z_C9Ymap43V0kuyGVjA/view?usp=drive_link",
+      "https://drive.google.com/file/d/12gCC8nQ8fvZewT5XqtCo_ZMSX6V0l6Uv/view?usp=drive_link",
+      "https://drive.google.com/file/d/1cMXTfi7cMlCPFaHJ7OsbadTsnutLsY9a/view?usp=drive_link",
+      "https://drive.google.com/file/d/1UHCtfBI7AGDBxIz_GB0JHLFBHXfuxpEa/view?usp=drive_link",
+      "https://drive.google.com/file/d/1mR9heGWlY1DD7g2pfiNQQyqc7GEWD4hH/view?usp=drive_link",
+      "https://drive.google.com/file/d/1mrgg5j4oWHMTu3rCY8_DMQ99_gQ_2gPY/view?usp=drive_link",
+      "https://drive.google.com/file/d/1b58OLCrOkJhoChrLthVguyXVQ939-0zL/view?usp=drive_link",
+      "https://drive.google.com/file/d/15Vyw3Ve7JjowYpmVDQD5vPZq4GD9I4e6/view?usp=drive_link",
+      "https://drive.google.com/file/d/1ivaOGgXXQiB-aJxyPNLY3yQZh4XKgyai/view?usp=drive_link",
+      "https://drive.google.com/file/d/1o3lR9ACO9TILHGATyqDudK41uBmw-2EY/view?usp=drive_link",
+      "https://drive.google.com/file/d/1fJ4cT0JeQ1g99VF2r-qK8DkVZx8HOTAB/view?usp=drive_link",
+      "https://drive.google.com/file/d/17-iivKNdIHbZ5FAnKKTGRps_epECrYl3/view?usp=drive_link",
+      "https://drive.google.com/file/d/1rLRhZrjwKoWw56RvsMh775IFlA0Iz8gP/view?usp=drive_link",
+      "https://drive.google.com/file/d/1hMtPYdpLipmUroK1Z_mGRBmA-zYab8xB/view?usp=drive_link",
+      "https://drive.google.com/file/d/1EtQp8dZv9exNHOoWGcIiA6b1RiehmHsS/view?usp=drive_link",
+      "https://drive.google.com/file/d/1NcBweby8L2APd57g_GpbipT0I_zRU3Q6/view?usp=drive_link",
+      "https://drive.google.com/file/d/1JD-OskeRBLnpdw_-iqAL0vwvZAp-25vZ/view?usp=drive_link",
+      "https://drive.google.com/file/d/1tmQICk1NeiWLH7EsXRQcfS4moomX5kev/view?usp=drive_link",
+      "https://drive.google.com/file/d/1azW2EhTStpSetzqQaGmt8K71MVHLjsts/view?usp=drive_link",
+      "https://drive.google.com/file/d/1AOP_JRihe2MJ1QrVt9JmlC4fUfdsJ_HJ/view?usp=drive_link",
+      "https://drive.google.com/file/d/1vPW1kcQLH01jWlp0-2cFVnZ_2Ohw13k6/view?usp=drive_link",
+      "https://drive.google.com/file/d/17Z_shJGbZ9rGssaaywkmMSD0_4dJ_tuL/view?usp=drive_link",
+      "https://drive.google.com/file/d/1mX3Whtt7Za5sn7c7HnN5MuUOC3Ajs9ib/view?usp=drive_link",
+      "https://drive.google.com/file/d/14-PZUJWCTfc8fTbCFNgl0i1-e585IHwG/view?usp=drive_link",
+      "https://drive.google.com/file/d/1QCMmbAb0vBj92_foSoiA6zvH2HxN4hom/view?usp=drive_link",
+      "https://drive.google.com/file/d/1P7BjJwayxYFMWqzG1MehIngx42ev_wDF/view?usp=drive_link",
+      "https://drive.google.com/file/d/17j3Bkt1npzJue7YQx1PPCvISkqToQoUx/view?usp=drive_link",
+      "https://drive.google.com/file/d/10VoKn3SCK2iufXn8FpDkfqAnpf7TFp2v/view?usp=drive_link",
+      "https://drive.google.com/file/d/11HqOuNQUBZuXOEpxA_rhDPlk5rYM6VbV/view?usp=drive_link",
+      "https://drive.google.com/file/d/1L67koIS-Mi5_WR5mM3WbICY1KydEkm_3/view?usp=drive_link",
+      "https://drive.google.com/file/d/1nxpfmMAxEAjHdGZxGK94eiq8tG0wo1-o/view?usp=drive_link",
+      "https://drive.google.com/file/d/1AsQQ4IEjZ6cUhN7pmrbi3ufD7lUAcKpW/view?usp=drive_link",
+      "https://drive.google.com/file/d/1X9vY97zLozrBPk6tKS-9FXvnK16wizHx/view?usp=drive_link",
+      "https://drive.google.com/file/d/1RFIWmtEEy8JP-OyZalUWbFq7XkaQ8kZn/view?usp=drive_link",
+      "https://drive.google.com/file/d/1PTPcZRMnMB3FF3CUVmrM4QKmsIx2Lc6D/view?usp=drive_link",
+      "https://drive.google.com/file/d/11ZVQ8FBgpCtUOGQhQiNNTXI6ubFuANS7/view?usp=drive_link",
+      "https://drive.google.com/file/d/1jdzT1Qh5BORi9G96CY11cZapeMeftU1E/view?usp=drive_link",
+      "https://drive.google.com/file/d/1ixprJKk5n_HFmbDWcU1z7EwAOEs_8awj/view?usp=drive_link",
+      "https://drive.google.com/file/d/1b3122ba9aVVsK4ZxQqcxqIJjE4AOHM5h/view?usp=drive_link",
+      "https://drive.google.com/file/d/1VywsemlJpFvpydJqAzTCPYUq4wXmDSSj/view?usp=drive_link",
+      "https://drive.google.com/file/d/1KnLSc3ZaVbjMvAlI5fDGMUKVZzjrJ-nC/view?usp=drive_link",
+      "https://drive.google.com/file/d/1BUPXD3-HJV_QA27-WJzUPrzFIIgwT0N6/view?usp=drive_link",
+      "https://drive.google.com/file/d/1YPo76KhgqmCrM41tH5P6la5MpjKVvKpt/view?usp=drive_link",
+      "https://drive.google.com/file/d/1gcu6beUHVpmCppN7cwelOUK6DWlXwfr5/view?usp=drive_link",
+      "https://drive.google.com/file/d/1EpsLMgBxDVCRSqqFJzkYWnqpR8AmsRKD/view?usp=drive_link",
+      "https://drive.google.com/file/d/1SYHFM5tqE7VA0a3H3_Sd4sixo3WOqX-d/view?usp=drive_link",
+      "https://drive.google.com/file/d/1_edlVaYG2DYPyUR7s0g4y7AwCMDL1XAu/view?usp=drive_link",
+      "https://drive.google.com/file/d/1p1rLEkco3BsudUtADf9naxJj1ZdX18SA/view?usp=drive_link",
+      "https://drive.google.com/file/d/10wmKKz_Tl_ap9PavTHLTFIS_pD9SsXGo/view?usp=drive_link",
+      "https://drive.google.com/file/d/1Y6rBg7_TxZXTgPuD8Z9KJkcWujlu32Lc/view?usp=drive_link",
+      "https://drive.google.com/file/d/18xNcUfPwwggrG_7M2IyWK1qZXpELaz9x/view?usp=drive_link",
+      "https://drive.google.com/file/d/1Y4ibYKANQxDzKPYrPsWkxNiFkfX7Aj6P/view?usp=drive_link",
+      "https://drive.google.com/file/d/12SDZd_-mzKGHcnndhjazoRA1EAihQO14/view?usp=drive_link",
+      "https://drive.google.com/file/d/1Rlkd1nL7cvUx2a-9BpLfNSPnI5AGlXoA/view?usp=drive_link",
+      "https://drive.google.com/file/d/1IoWlNFxnboNPuGMMHPOSRV1RomBMTgvk/view?usp=drive_link",
+      "https://drive.google.com/file/d/13uounw9NVFOyXgFwpfo4997uXRZEjTmI/view?usp=drive_link",
+      "https://drive.google.com/file/d/1XwUf5mvRs92z5yTkFp1nCYBoUHHaJDt8/view?usp=drive_link",
+      "https://drive.google.com/file/d/1dtFTrz4OgdbM7vzedxlAj0pny5S4c1n3/view?usp=drive_link",
+      "https://drive.google.com/file/d/1UjtcNx6_hMyB0UeWbqTVgPAVczIezE_o/view?usp=drive_link",
+      "https://drive.google.com/file/d/1q1jqp-HJbAQEx3MBuOaevY4c4aYIyHRI/view?usp=drive_link",
+      "https://drive.google.com/file/d/1LIw_nSDupVs6yPja-vJsJA-k8sq6wf_r/view?usp=drive_link",
+      "https://drive.google.com/file/d/1TUrjIfzr2jI5hstY2e0GGyiYlRi2-PlS/view?usp=drive_link",
+      "https://drive.google.com/file/d/1-DNYj0DlmOoxCINVqOeY0nRTtH9EU2Hg/view?usp=drive_link",
+      "https://drive.google.com/file/d/17VCLIcbyFoT8Zw2f5IxNxb1HQFMPc18W/view?usp=drive_link",
+      "https://drive.google.com/file/d/1o7ZuNWLZQY3gxs6xiygDCMxgC22c79BK/view?usp=drive_link",
+      "https://drive.google.com/file/d/1x2l7YbGmfY6mnwl5_Eo4ZgzCRltosNCV/view?usp=drive_link",
+      "https://drive.google.com/file/d/1545L0kw2Jq0HObyi-c3Tgqe8Thx_qez_/view?usp=drive_link",
+      "https://drive.google.com/file/d/1vE3uvOsvbSG9XkrLZ5UF-iA9qSVaPyCd/view?usp=drive_link",
+      "https://drive.google.com/file/d/1CNirCGBDWTevyMZIY9XVhZ46G1Jg7syf/view?usp=drive_link",
+      "https://drive.google.com/file/d/1iLBZT5RGLqkonKNFtbQQ9qJXrASOvwLN/view?usp=drive_link",
+      "https://drive.google.com/file/d/11ShkrnLDKOP8UHj_26ZeiT2-5mQUY6ih/view?usp=drive_link",
+      "https://drive.google.com/file/d/1Fx6zYKwwskE8thC4W0hil9_bLEYfD3a1/view?usp=drive_link",
+      "https://drive.google.com/file/d/1vIAzF9A661Tkp96680aMSghAVozxTyji/view?usp=drive_link",
+      "https://drive.google.com/file/d/1WAWk9cuj--IdLdtpod80AdqIvbW-pDeg/view?usp=drive_link",
+      "https://drive.google.com/file/d/1qGfdHmZFcpptyLVmb872Wyo9x8qoZ_RS/view?usp=drive_link",
+      "https://drive.google.com/file/d/1_G9BNeCdfqnketJ_Fl61NV7gtR8segha/view?usp=drive_link",
+      "https://drive.google.com/file/d/1Ca8ZI3mkxt0nIObEl4qiVnCz7Z1gZR6d/view?usp=drive_link",
+      "https://drive.google.com/file/d/1r1ijp0njQjEE6t8u6kkf3MSbR27jrKhm/view?usp=drive_link",
+      "https://drive.google.com/file/d/1dEBf_bAtU-vvRCc8sNGg9kxhUVGeqadB/view?usp=drive_link",
+      "https://drive.google.com/file/d/1WnJfjun7M0R8E9ALQ66BjtVdP2WV-eIH/view?usp=drive_link",
+      "https://drive.google.com/file/d/1arP_dGtzvkOCe4j5gzvKlSMfGbxoh_ux/view?usp=drive_link",
+      "https://drive.google.com/file/d/12l3TTVxzJ2e8_IMYfRCGuMWH7zgWFOkS/view?usp=drive_link",
+      "https://drive.google.com/file/d/1bfmwqAp7b0NCiFqmo7F3YjNu-g22s-KQ/view?usp=drive_link",
+      "https://drive.google.com/file/d/1f61Svv0_r_ElVjSnG1rlWLK9wO9yUO-o/view?usp=drive_link",
+      "https://drive.google.com/file/d/10LWawhqFCvcdre9PyVIk_MFwo3eDgxHd/view?usp=drive_link",
+      "https://drive.google.com/file/d/1F2J7z2LsiCwcSBAyO2EM_AB4pTOdk7ja/view?usp=drive_link",
+      "https://drive.google.com/file/d/1lJViY6UvQxtUbfsXT23iL_bR8-Pc72er/view?usp=drive_link",
+      "https://drive.google.com/file/d/1XaFrO3PRrC1sLEFs6dKPdVFJSsWqn7IS/view?usp=drive_link",
+      "https://drive.google.com/file/d/1zeD5GRK-rRCFFSPqDBRXRzszOVwZPYUx/view?usp=drive_link",
+      "https://drive.google.com/file/d/1d3xx8KnOAJWegw-k0IPFCKr-9vQOcoWZ/view?usp=drive_link",
+      "https://drive.google.com/file/d/1JRiTlloIsnxwhjGEbMQ5yZPnIq1daC5Y/view?usp=drive_link",
+      "https://drive.google.com/file/d/1zyucypsnbG0Bm9ZBYs3qKkbjYiMQhBKj/view?usp=drive_link",
+      "https://drive.google.com/file/d/1E_pQ9Oxr_xxy9oU8JH0dF_XxbcekPV-J/view?usp=drive_link",
+      "https://drive.google.com/file/d/1QpnyJM2_5p9BcUU-Wjo9jiy30-KGZqU8/view?usp=drive_link",
+      "https://drive.google.com/file/d/19UQA9Fe_tDTp-RtUL4K40pwlOL74ooSX/view?usp=drive_link",
+      "https://drive.google.com/file/d/1FoRtcyi_RtJkYOWHJvbDAkj8YZBnunY_/view?usp=drive_link",
+      "https://drive.google.com/file/d/1BB3Mw2alaq58OSom_Hb3KG6NPqjWPMuV/view?usp=drive_link",
+      "https://drive.google.com/file/d/1ScL-D9HZenswZZzXZrwPy4G9NSgaTaMa/view?usp=drive_link",
+      "https://drive.google.com/file/d/1dYcoDif579Ln2hej9Vm8fDtr_SeyWB-U/view?usp=drive_link",
+      "https://drive.google.com/file/d/1wSeqdLyWG8CN854TO-kxtU2bhdgxnUiG/view?usp=drive_link",
+      "https://drive.google.com/file/d/1sTomR6sCQnpi88jWrzbh6-U4oCn-SqO9/view?usp=drive_link",
+      "https://drive.google.com/file/d/1wvSmSspFZmg9-V3SYRp9UKW2kbaUHFc2/view?usp=drive_link",
+      "https://drive.google.com/file/d/1ZGxYvA6B5BD9QxmRONFY3TMVlzWL0zeE/view?usp=drive_link",
+      "https://drive.google.com/file/d/1CC3ZhlC3qvDrrJLYYwFBgPrhCAMYGtSQ/view?usp=drive_link",
+      "https://drive.google.com/file/d/1CVOsDUzfwrLJlHpqItD3_3zqD2JaEeGG/view?usp=drive_link",
+      "https://drive.google.com/file/d/1QOhfXve_zrdQV90v0rP8JMQnPiqIS4-u/view?usp=drive_link",
+      "https://drive.google.com/file/d/1jCUwJjAGyvx9pPWe0N7f3MCz9M45J-4p/view?usp=drive_link",
+      "https://drive.google.com/file/d/1L-XRoterkL_hJKUU2MXn4_vrwi8Gja8z/view?usp=drive_link",
+      "https://drive.google.com/file/d/1R6a9U9JBTAjIEi4Ft7khoNiYvG3eWmpr/view?usp=drive_link",
+      "https://drive.google.com/file/d/10AU8gHjpB3U7-w2WkoTAuF6LbZlMvM-I/view?usp=drive_link",
+      "https://drive.google.com/file/d/1xnIeZUV6b4WfjOCnJnzAp4tRHC9-7uwG/view?usp=drive_link",
+      "https://drive.google.com/file/d/1SVNEk-LRGY068p43tieqJNk6mf11buBO/view?usp=drive_link",
+      "https://drive.google.com/file/d/1ezklkv-q4Pt5MOB0zo6RvbcpamfzIe0j/view?usp=drive_link",
+      "https://drive.google.com/file/d/1CRCr4Mg4rnPhDQrPowbdKMpGMekm80c_/view?usp=drive_link",
+      "https://drive.google.com/file/d/14hFuwD2rL91Zmarx539uoGRnJZbkcGdM/view?usp=drive_link",
+      "https://drive.google.com/file/d/1zSDVTH4mRn95iAidPyuSoonq-AaDAjDm/view?usp=drive_link",
+      "https://drive.google.com/file/d/1lxEtqhMp7h_Cpj2bHO0ycf4q6nwuyMuy/view?usp=drive_link",
+      "https://drive.google.com/file/d/1ozWoPna6kGAfvhJNN62E34xqdHM5Vp-j/view?usp=drive_link",
+      "https://drive.google.com/file/d/1lNNvLt2Zk385le8EtJtqcIBCIpj_bYY2/view?usp=drive_link",
+      "https://drive.google.com/file/d/1D65YTShCoyy8XlAFsMRE-HNYWX4widfb/view?usp=drive_link",
+      "https://drive.google.com/file/d/12gKMyICsHiMwJxeLW-aTve2ChUwv-eUU/view?usp=drive_link",
+      "https://drive.google.com/file/d/1p3iEwjqyTCcHde07i34Ah3MdtXOq-js7/view?usp=drive_link",
+      "https://drive.google.com/file/d/1mf_0lycyLYAOCXpw3wbicP1wF5GNc4CS/view?usp=drive_link",
+      "https://drive.google.com/file/d/1Cmc1Aas7dEteegFjunSoKW8imAWb4Ibp/view?usp=drive_link",
+      "https://drive.google.com/file/d/1pd3PNGTqyHJbuAU97v78eoC78KwSdVy-/view?usp=drive_link",
+      "https://drive.google.com/file/d/1lKcG0cUgOHZLqoFXq10FH5WSQKIW9f1f/view?usp=drive_link",
+      "https://drive.google.com/file/d/1D5AgC1oqI88cVknCaQRLT-e5asvBJLLN/view?usp=drive_link",
+      "https://drive.google.com/file/d/1fe-x-Dpy_C68w3UbejHNkrBWdtpHvyx6/view?usp=drive_link",
+      "https://drive.google.com/file/d/1RMlETI186oEQxDh8GSqVEOUk-I7pGInO/view?usp=drive_link",
+      "https://drive.google.com/file/d/1BL77ZdSh7USCw_0pY6769UidvXIObx9M/view?usp=drive_link",
+      "https://drive.google.com/file/d/1xR_bs7am981Gv1Q8oDeLPQ6BhhtKUaQC/view?usp=drive_link",
+      "https://drive.google.com/file/d/1X1vrT3lZQqxpX-ZyjBBilktyKqkHvkAs/view?usp=drive_link",
+      "https://drive.google.com/file/d/1uogL_XU4CgKxcW5MiwKI4mI1O9zC4vcB/view?usp=drive_link",
+      "https://drive.google.com/file/d/1GtpO0XUNdq9bN0ccHK6E5uLusGEi3fEQ/view?usp=drive_link",
+      "https://drive.google.com/file/d/1rSDkv9uIxMozHbEsQd3BS9ybp0yO5Hi8/view?usp=drive_link",
+      "https://drive.google.com/file/d/1Ds-0x7szF8-qth6SQIAkd2enPJgsViwt/view?usp=drive_link",
+      "https://drive.google.com/file/d/1_ROcEpHCZBd_y8duVM8AAX4L5iwr-Yyn/view?usp=drive_link",
+      "https://drive.google.com/file/d/11fyF18CldS0jWTecRbh0d04gVEYIv7XW/view?usp=drive_link",
+      "https://drive.google.com/file/d/1Ptnb8gkb9HvoJOp4z0zzYzVe8ine0TQc/view?usp=drive_link",
+      "https://drive.google.com/file/d/1A2FnoAKYH5KYscTOzJxxnohZkY6FOhR3/view?usp=drive_link",
+      "https://drive.google.com/file/d/1hDgBIJEeiE-aoC5SMX_74E9CkCBgkTcJ/view?usp=drive_link",
+      "https://drive.google.com/file/d/19AzQi7WoLzrIZvqWcfez1wXI3aIn9ElE/view?usp=drive_link",
+      "https://drive.google.com/file/d/10i1-6NAnFdFX7PKXDHNikGVwZtMifLku/view?usp=drive_link",
+      "https://drive.google.com/file/d/1V7ggZsJB-t4pxpYqiVr7mumz5AHA5q2m/view?usp=drive_link",
+      "https://drive.google.com/file/d/1c39sJOZdvhPEk7OAxfQ5WFG3FKRKvQ_l/view?usp=drive_link",
+      "https://drive.google.com/file/d/1cixopw1398QdbkE-2h8KQ7P8S0nCwUR-/view?usp=drive_link",
+      "https://drive.google.com/file/d/1fCWTA9C3Z9qu6UtlO3CNlq30CmIU_dlJ/view?usp=drive_link",
+      "https://drive.google.com/file/d/1OT7cBFuAujZAB8WhJ98o03gEVkxnINRW/view?usp=drive_link",
+      "https://drive.google.com/file/d/1udHCnav_J8feBFKlmuBAU2ARS5l4PiVj/view?usp=drive_link",
+      "https://drive.google.com/file/d/1bMQ27bM61jMvcpfAfC0f2-Wl_sqSMzfp/view?usp=drive_link",
+      "https://drive.google.com/file/d/1rkurYZl_wavTqhY0U3sv7Q20z4wnZrwB/view?usp=drive_link",
+      "https://drive.google.com/file/d/1gvcNtfzwNZ0zRuDyDtljUWVZPhIyV6py/view?usp=drive_link",
+      "https://drive.google.com/file/d/1WzTMhnPU-m5Jkovhc19p3wysOv4ZhoMH/view?usp=drive_link",
+      "https://drive.google.com/file/d/1XeUnL6lOTy59Ojz0rh_6Bzru2xpqiDg6/view?usp=drive_link",
+      "https://drive.google.com/file/d/1JM7bVQWzwXffX2lMERtA7AHCA1-HCrcW/view?usp=drive_link",
+      "https://drive.google.com/file/d/1k2JTgJVCYqsHTgLQkl0pc_Noys7yUNAZ/view?usp=drive_link",
+      "https://drive.google.com/file/d/1xYgKrXtrAyhb61hp-rUH4A0xTV8sBEcj/view?usp=drive_link",
+      "https://drive.google.com/file/d/1Hc3yqYfg2FP1z76mzK_FHCtNJJbMES69/view?usp=drive_link",
+      "https://drive.google.com/file/d/1oPoMeE85mf74SBtVL1dvXweg7TwwPzfQ/view?usp=drive_link",
+      "https://drive.google.com/file/d/1dWl1cMBGD_Nrdmrgr-vllprp58-r4aad/view?usp=drive_link",
+      "https://drive.google.com/file/d/1nxUmHgRdbNDTJTjmnVNpKmhaDG7QTnES/view?usp=drive_link",
+      "https://drive.google.com/file/d/1cAH_ziYdEaRgBfI9YMBjgR1iiK6EUdl9/view?usp=drive_link",
+      "https://drive.google.com/file/d/1AjWWm_NxrKtIXp2Rmq_PwD9T7GBxDBxA/view?usp=drive_link",
+      "https://drive.google.com/file/d/1KSe7FaDz8sy4AB4MElh81p9tzgI8OtwB/view?usp=drive_link",
+      "https://drive.google.com/file/d/1gQdQAh_etqGDQpESv99OwDbAO4g9fJCJ/view?usp=drive_link",
+      "https://drive.google.com/file/d/1v5j0FNegnXxagZzNvI3xRc5bHcSnp_Tr/view?usp=drive_link",
+      "https://drive.google.com/file/d/1hwsPFxDJEcyItZQV5zEngSBJ0_wXEHGp/view?usp=drive_link",
+      "https://drive.google.com/file/d/10KauanlvnHm-iUTnKLjU_TSj7Utwif42/view?usp=drive_link",
+      "https://drive.google.com/file/d/1Ys9de2uH9_O-gOfe-yFtk6iJWvU0dpe4/view?usp=drive_link",
+      "https://drive.google.com/file/d/1u1yL9q85Sov90gtash6DAp7g9gwAYnhh/view?usp=drive_link",
+      "https://drive.google.com/file/d/1HtwR58CH8c_AJr-7fzf4DacoPzwxthcO/view?usp=drive_link",
+      "https://drive.google.com/file/d/1uWYUANYAz226MxA3n91kPuunizndgoL8/view?usp=drive_link",
+      "https://drive.google.com/file/d/1BtubDEbL84sg3G0PnlaWaUYc-Z-A422U/view?usp=drive_link",
+      "https://drive.google.com/file/d/1pAZXzEFfhtLhxUDm1r77_cuaris4ffRh/view?usp=drive_link",
+      "https://drive.google.com/file/d/1yoteoNAkPOktVWxo42Lyz7A1gTsjdEAG/view?usp=drive_link",
+      "https://drive.google.com/file/d/1io5aUyDILAAaggbybp7NwHPVhEjFwK7E/view?usp=drive_link",
+      "https://drive.google.com/file/d/1hwsrnqt_YRnLpDH8nEDfn-sX1G4p0s4t/view?usp=drive_link"
+    ];
+
+    const names = [
+      "LPA / Planning District Boundary",
+      "Proposed Land Use Mysuru – Nanjangud Town LPA",
+      "Proposed Land Use Mysuru City",
+      "Proposed Land Use Nanjangud",
+      "Proposed Circulation_LPA",
+      "Proposed Circulation Mysuru City",
+      "Zoning Map",
+      "PD_1.pdf","PD_2.pdf","PD_3A.pdf","PD_3B.pdf","PD_4.pdf","PD_5A.pdf","PD_5B.pdf","PD_6A.pdf","PD_6B.pdf",
+      "PD_7A.pdf","PD_7B.pdf","PD_8A.pdf","PD_8B.pdf","PD_9A.pdf","PD_9B.pdf","PD_9C.pdf","PD_9D.pdf","PD_10A.pdf","PD_10B.pdf",
+      "PD_11A.pdf","PD_11B.pdf","PD_12.pdf","PD_13A.pdf","PD_13B.pdf","PD_14A.pdf","PD_14B.pdf","PD_14C.pdf","PD_15A.pdf","PD_15B.pdf",
+      "PD_16A.pdf","PD_16B.pdf","PD_17A.pdf","PD_17B.pdf","PD_18A.pdf","PD_18B.pdf","PD_19.pdf","PD_20A.pdf","PD_20B.pdf","PD_21.pdf",
+      "PD_22A.pdf","PD_22B.pdf","PD_23A.pdf","PD_23B.pdf","PD_24.pdf","PD_25A.pdf","PD_25B.pdf","PD_25C.pdf","PD_26A.pdf","PD_26B.pdf",
+      "PD_26C.pdf","PD_27A.pdf","PD_27B.pdf","PD_28A.pdf","PD_28B.pdf","PD_28C.pdf","PD_28D.pdf","PD_28E.pdf","PD_28F.pdf","PD_28G.pdf",
+      "PD_28H.pdf","PD_28I.pdf","PD_28J.pdf","PD_29A.pdf","PD_29B.pdf","PD_30A.pdf","PD_30B.pdf","PD_30C.pdf","PD_30D.pdf","PD_30E.pdf",
+      "PD_30F.pdf","PD_30G.pdf","PD_31A.pdf","PD_31B.pdf","PD_31C.pdf","PD_31D.pdf","PD_31E.pdf","PD_31F.pdf","PD_31G.pdf","PD_32A.pdf",
+      "PD_32B.pdf","PD_32C.pdf","PD_32D.pdf","PD_33A.pdf","PD_33B.pdf","PD_33C.pdf","PD_33D.pdf","PD_33E.pdf","PD_34A.pdf","PD_34B.pdf",
+      "PD_34C.pdf","PD_34D.pdf","PD_34E.pdf","PD_35A.pdf","PD_35B.pdf","PD_35C.pdf","PD_35D.pdf","PD_36A.pdf","PD_36B.pdf","PD_36C.pdf",
+      "PD_36D.pdf","PD_36E.pdf","PD_36F.pdf","PD_37A.pdf","PD_37B.pdf","PD_37C.pdf","PD_37D.pdf","PD_37E.pdf","PD_37F.pdf","PD_37G.pdf",
+      "PD_37H.pdf","PD_38A.pdf","PD_38B.pdf","PD_38C.pdf","PD_38D.pdf","PD_38E.pdf","PD_39A.pdf","PD_39B.pdf","PD_39C.pdf","PD_39D.pdf",
+      "PD_39E.pdf","PD_39F.pdf","PD_39G.pdf","PD_40A.pdf","PD_40B.pdf","PD_40C.pdf","PD_40D.pdf","PD_40E.pdf","PD_40F.pdf","PD_40G.pdf",
+      "PD_40H.pdf","PD_41A.pdf","PD_41B.pdf","PD_41C.pdf","PD_41D.pdf","PD_41E.pdf","PD_41F.pdf","PD_42A.pdf","PD_42B.pdf","PD_42C.pdf",
+      "PD_42D.pdf","PD_42E.pdf","PD_42F.pdf","PD_43A.pdf","PD_43B.pdf","PD_43C.pdf","PD_43D.pdf","PD_43E.pdf","PD_43F.pdf","PD_43G.pdf",
+      "PD_43H.pdf","PD_43I.pdf","PD_43J.pdf","PD_43K.pdf","PD_43L.pdf","PD_43M.pdf","PD_44A.pdf","PD_44B.pdf","PD_44C.pdf","PD_44D.pdf",
+      "PD_44E.pdf","PD_44F.pdf","PD_44G.pdf","PD_44H.pdf","PD_44I.pdf","PD_44J.pdf","PD_45A.pdf","PD_45B.pdf","PD_45C.pdf","PD_45D.pdf",
+      "PD_45E.pdf","PD_45F.pdf","PD_45G.pdf","PD_45H.pdf",
+      "Volume 1 :: DATA COLLECTION, ANALYSIS & PROJECTIONS",
+      "Volume 2 :: Proposals",
+      "Volume 3 :: Zoning of Land use & Development Control Regulations"
+    ];
+
+    // helper: drive file id, preview + thumb urls
+    const idFromUrl = u => (u.match(/\/d\/([^/]+)\//)||[])[1] || "";
+    const previewUrl = id => `https://drive.google.com/file/d/${id}/preview`;
+    const thumbUrl   = id => `https://drive.google.com/thumbnail?id=${id}&sz=w1000`;
+
+    // build typed items
+    const items = names.map((title, i) => {
+      const url = links[i] || "#";
+      const id  = idFromUrl(url);
+      let tags = [];
+
+      if (/^PD_/i.test(title) || title.trim().startsWith("LPA / Planning District Boundary")) {
+        tags.push("pd");
+      }
+      if (/^Zoning Map/i.test(title)) tags.push("zoning");
+      if (/^Proposed Land Use/i.test(title)) tags.push("plu");
+      if (/^Proposed Circulation/i.test(title)) tags.push("circ");
+      if (/^Volume\s*\d+/i.test(title)) tags.push("report");
+
+      // Safety net: if none matched but it's one of the first category set
+      if (tags.length === 0 && i <= 6) {
+        // first 7 are: LPA/PLU/PLU/PLU/CIRC/CIRC/Zoning
+        tags = [ ["pd"],["plu"],["plu"],["plu"],["circ"],["circ"],["zoning"] ][i] || ["pd"];
+      }
+
+      return { title, url, id, tags };
+    });
+
+    const grid = document.getElementById('library-grid');
+    function render(filter = 'all') {
+      grid.innerHTML = "";
+      const list = filter === 'all' ? items : items.filter(it => it.tags.includes(filter));
+      for (const it of list) {
+        const card = document.createElement('div');
+        card.className = 'card';
+
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb';
+        thumb.style.backgroundImage = it.id ? `url("${thumbUrl(it.id)}")` : 'none';
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+
+        const h4 = document.createElement('h4');
+        h4.textContent = it.title;
+
+        const row = document.createElement('div');
+        row.className = 'row';
+
+        const viewBtn = document.createElement('a');
+        viewBtn.className = 'btn';
+        viewBtn.textContent = 'Preview';
+        viewBtn.href = '#';
+        viewBtn.addEventListener('click', (e) => {
+          e.preventDefault();
+          openPdf(it.id || idFromUrl(it.url));
+        });
+
+        const openBtn = document.createElement('a');
+        openBtn.className = 'btn';
+        openBtn.textContent = 'Open in Drive';
+        openBtn.target = '_blank';
+        openBtn.rel = 'noopener';
+        openBtn.href = it.url;
+
+        row.append(viewBtn, openBtn);
+        meta.append(h4, row);
+        card.append(thumb, meta);
+        grid.append(card);
+      }
+    }
+
+    // --- filters ------------------------------------------------------------
+    const chips = Array.from(document.querySelectorAll('.chip'));
+    chips.forEach(ch => ch.addEventListener('click', () => {
+      chips.forEach(c => c.classList.remove('active'));
+      ch.classList.add('active');
+      render(ch.dataset.filter);
+    }));
+
+    // --- modal --------------------------------------------------------------
+    const modal = document.getElementById('pdf-modal');
+    const frame = document.getElementById('pdf-frame');
+    const closeBtn = document.querySelector('.modal-close');
+    const backdrop = document.querySelector('.modal-backdrop');
+
+    function openPdf(id) {
+      if (!id) return;
+      frame.src = previewUrl(id);
+      modal.classList.remove('hidden');
+      modal.setAttribute('aria-hidden','false');
+    }
+    function closePdf() {
+      frame.src = "";
+      modal.classList.add('hidden');
+      modal.setAttribute('aria-hidden','true');
+    }
+    closeBtn.addEventListener('click', closePdf);
+    backdrop.addEventListener('click', closePdf);
+    window.addEventListener('keydown', (e) => { if (e.key === 'Escape') closePdf(); });
+
+    // --- header mobile toggle ----------------------------------------------
+    const navToggle = document.querySelector('.nav-toggle');
+    const appNav = document.querySelector('.app-nav');
+    navToggle?.addEventListener('click', () => {
+      navToggle.classList.toggle('open');
+      appNav.classList.toggle('open');
+    });
+    render('all');
+  </script>
+</body>
+</html>

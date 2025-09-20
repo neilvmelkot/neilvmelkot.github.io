@@ -1,0 +1,200 @@
+:root{
+  --bg:#0e1013; --panel:#171a21; --muted:#aab3c5; --card:#1c2028; --edge:#2a2f3a;
+  --txt:#e9eef7; --accent:#ffdb4d; --gap:24px; --radius:16px; --shadow:0 10px 30px rgba(0,0,0,.25);
+  --ease:cubic-bezier(.22,.61,.36,1);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--txt);font-family:"DM Sans",system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+a{color:inherit;text-decoration:none}
+
+@media (max-width: 640px) {
+  body {
+    padding-top:72px; 
+  }
+}
+
+.wrap{max-width:1200px;margin:0 auto;padding:96px 20px 40px}
+.center{text-align:center}
+
+.panel{background:var(--panel);border:1px solid var(--edge);border-radius:var(--radius);padding:24px;margin:var(--gap) 0;box-shadow:var(--shadow)}
+.panel-header{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
+.panel-header h2{font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;letter-spacing:.2px;margin:0}
+.panel-actions{display:flex;gap:10px;flex-wrap:wrap}
+.panel-footer{margin-top:16px}
+
+.hero-copy h1{font-family:"Plus Jakarta Sans",sans-serif;font-weight:700;margin:0 0 8px}
+.hero-copy h1 span{font-weight:500;opacity:.8}
+.muted{color:var(--muted)}
+.hero-badges{display:flex;gap:10px;margin:16px 0 20px;flex-wrap:wrap}
+.badge{display:inline-flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--edge);padding:8px 12px;border-radius:999px;color:#d7def0}
+.i{display:inline-block;width:14px;height:14px;border-radius:3px;background:linear-gradient(180deg,#7cc8ff,#4a73ff)}
+
+.disclaimer{background:#3a2a00;color:#ffe199;border:1px solid #664900;padding:10px 12px;border-radius:10px}
+
+/* Map */
+.map-view{height:600px;border:1px solid var(--edge);border-radius:12px;overflow:hidden;overscroll-behavior:contain;position:relative}
+.map-help{color:var(--muted);font-size:.9rem;margin-top:10px}
+
+/* Quick links grid */
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--gap)}
+.ql-centered{max-width:980px;margin-inline:auto}
+.ql-card{position:relative;display:block;height:210px;background:#111 center/cover no-repeat;border:1px solid var(--edge);
+  border-radius:12px;overflow:hidden;box-shadow:var(--shadow);transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
+.ql-card::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.05),rgba(0,0,0,.45))}
+.ql-card:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.35)}
+.ql-label{position:absolute;left:14px;right:14px;bottom:12px;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);
+  padding:10px 12px;border-radius:10px;font-weight:700;text-align:center}
+.ql-note{color:#cfd7ff;opacity:.9}
+
+/* Library */
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--gap)}
+.card{background:var(--card);border:1px solid var(--edge);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+.card .thumb{height:180px;background:#0f131a center/cover no-repeat}
+.card .meta{padding:14px}
+.card .meta h4{margin:0 0 8px;font-weight:700;font-family:"Plus Jakarta Sans",sans-serif}
+.card .row{display:flex;gap:10px}
+.btn{background:#2a3242;border:1px solid var(--edge);color:#e8efff;border-radius:10px;padding:8px 12px;font-weight:700;transition:transform .18s var(--ease),background .18s;display:inline-block}
+.btn:hover{transform:translateY(-2px);background:#36425b}
+.pill{border-radius:999px;padding:8px 14px}
+
+/* ========= Navbar (desktop + mobile) ========= */
+.app-header{
+  position:fixed;left:0;top:0;right:0;z-index:100;
+  background:rgba(14,16,19,.72);backdrop-filter:blur(10px);
+  border-bottom:1px solid rgba(255,255,255,.08)
+}
+.header-inner{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 18px;
+}
+.brand{
+  display:flex;align-items:center;gap:12px;
+  font-weight:800;letter-spacing:.25px;
+  font-size:1.22rem;
+  line-height:1;
+}
+.crest{
+  width:28px;height:28px;
+  border-radius:6px;
+  background:url('Royal_coat_of_arms_of_the_Kingdom_of_Mysore.svg.png') center/cover no-repeat;
+  filter:drop-shadow(0 0 4px rgba(0,0,0,.3))
+}
+.app-nav{
+  display:flex;align-items:center;gap:8px;
+  transition:transform .35s var(--ease),opacity .35s var(--ease)
+}
+.nav-link{
+  position:relative;display:inline-block;
+  padding:10px 14px;border-radius:12px;opacity:.95;
+  font-weight:700;
+}
+.nav-link::after{
+  content:"";position:absolute;left:14px;right:14px;bottom:6px;height:2px;
+  background:linear-gradient(90deg,#8fb4ff,#ffd66e);
+  transform:scaleX(0);transform-origin:left;transition:transform .25s var(--ease)
+}
+.nav-link:hover::after,.nav-link.active::after{transform:scaleX(1)}
+
+.nav-toggle{
+  display:none;width:44px;height:44px;border-radius:12px;
+  background:#232834;border:1px solid var(--edge);position:relative;z-index:130; /* above sheet */
+}
+.nav-toggle::before,.nav-toggle::after{
+  content:"";position:absolute;left:10px;right:10px;height:2px;
+  background:#e8efff;transition:transform .25s var(--ease)
+}
+.nav-toggle::before{top:14px}
+.nav-toggle::after{bottom:14px}
+
+/* ===== Modal ===== */
+.modal{position:fixed;inset:0;z-index:200;display:grid;place-items:center}
+.modal.hidden{display:none}
+.modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.65)}
+.modal-content{position:relative;width:min(1000px,92vw);height:min(82vh,900px);background:#0f131a;border:1px solid var(--edge);
+  border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}
+#pdf-frame{width:100%;height:100%;border:0}
+.modal-close{position:absolute;top:8px;right:8px;background:#2a3242;border:1px solid var(--edge);color:#fff;border-radius:8px;padding:6px 10px}
+
+.filters{
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:center; margin:8px 0 18px;
+}
+.chip{
+  appearance:none; border:1px solid var(--edge);
+  background:linear-gradient(180deg,#232a36,#1c222e);
+  color:#fff; font-family:"Plus Jakarta Sans",sans-serif; font-weight:700; letter-spacing:.2px;
+  padding:10px 14px; border-radius:999px; cursor:pointer;
+  transition:transform .15s var(--ease), box-shadow .15s var(--ease), background .15s var(--ease), border-color .15s var(--ease);
+}
+.chip:hover{ transform:translateY(-2px); box-shadow:0 10px 20px rgba(0,0,0,.25); }
+.chip.active{
+  background:linear-gradient(180deg,#3a4660,#2c3650);
+  border-color:#4e5d7f;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.06), 0 8px 24px rgba(0,0,0,.35);
+}
+
+/* ===== Map loading crest overlay ===== */
+.map-loading{
+  position:absolute; inset:0; display:grid; place-items:center;
+  background:#0f131a; transition:opacity .25s var(--ease), transform .25s var(--ease);
+  z-index:2;
+}
+.map-loading.hide{ opacity:0; transform:scale(.98); pointer-events:none; }
+.crest-splash{
+  width:min(160px, 40vw); height:min(160px, 40vw);
+  background:url('Royal_coat_of_arms_of_the_Kingdom_of_Mysore.svg.png') center/contain no-repeat;
+  filter:drop-shadow(0 6px 18px rgba(0,0,0,.35)); opacity:.9;
+}
+
+/* ========= Responsive ========= */
+/* Tablet and down: show hamburger & turn nav into a sheet */
+@media (max-width: 900px){
+  .wrap{padding:88px 16px 32px}
+
+  .nav-toggle{display:block}
+
+.app-nav {
+  position:fixed;
+  left:0;
+  right:0;
+  top:64px;
+  background:#141821;
+  border-top:1px solid var(--edge);
+  border-bottom:1px solid var(--edge);
+  border-radius:0;
+  padding:18px 20px;
+  transform:translateY(-12px) scale(.96);
+  opacity:0;
+  pointer-events:none;
+  flex-direction:column;
+  gap:10px;
+}
+
+
+  .app-nav.open{ transform:translateY(0); opacity:1; pointer-events:auto; }
+
+  /* Touch-friendly links */
+  .nav-link{
+    display:block; padding:14px 14px; border-radius:12px; font-size:1.04rem;
+    background:transparent; border:1px solid transparent; text-align:left;
+  }
+  .nav-link + .nav-link{ margin-top:6px; }
+  .nav-link:hover{ background:#1b2332; border-color:#2a3242; }
+
+  .nav-link::after{ display:none; }
+  .nav-toggle.open::before{transform:translateY(6px) rotate(45deg)}
+  .nav-toggle.open::after{transform:translateY(-6px) rotate(-45deg)}
+  .panel-header{flex-wrap:wrap}
+  .panel-header h2{flex:1 1 100%}
+  .panel-actions{width:100%}
+  .panel-actions .btn{flex:1 1 48%; text-align:center}
+}
+@media (max-width: 640px){
+  .grid-4,.grid-3{grid-template-columns:1fr}
+  .map-view{height:480px}
+
+  .brand{ font-size:1.12rem; gap:10px; }
+  .crest{ width:26px; height:26px; }
+  .panel-actions .btn{flex:1 1 100%}
+}

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MUDA Explorer – Mysuru Master Plan</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;700&family=DM+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+  <!-- ArcGIS 4.x CSS (required for Search/Zoom widgets) -->
+  <link rel="stylesheet" href="https://js.arcgis.com/4.33/esri/themes/dark/main.css" />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="Royal_coat_of_arms_of_the_Kingdom_of_Mysore.svg.png" />
+
+  <link rel="stylesheet" href="muda.css" />
+</head>
+<body class="dark">
+
+  <!-- Header / Navbar -->
+  <header class="app-header">
+    <div class="wrap header-inner">
+      <a class="brand" href="muda.html">
+        <span class="crest"></span>
+        <strong>MUDA Explorer</strong>
+      </a>
+
+      <button class="nav-toggle" aria-label="Toggle menu"></button>
+
+      <nav class="app-nav">
+        <a href="#map" class="nav-link">Map</a>
+        <a href="#quick-links" class="nav-link">Quick Links</a>
+        <a href="muda-library.html" class="nav-link">Library</a>
+        <a class="nav-link pill" href="https://www.mudamysore.gov.in/" target="_blank" rel="noopener">MUDA Website</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- Intro -->
+    <section class="panel hero" id="overview">
+      <div class="hero-copy">
+        <h1>Mysore Master Plan <span></span> – Unofficial Viewer</h1>
+        <p class="muted">
+          Search addresses on the interactive map; browse zoning & proposed land-use layers; and quickly open
+          the official PDFs. Always verify with MUDA for official use.
+        </p>
+
+        <div class="hero-badges">
+          <div class="badge"><i class="i i-layers"></i> Zoning &amp; Proposed Land Use</div>
+          <div class="badge"><i class="i i-pdf"></i> 100+ PDFs (PD&nbsp;1–45)</div>
+        </div>
+
+        <div class="disclaimer">
+          <strong>Disclaimer:</strong> Unofficial convenience viewer. Boundaries may be generalized.
+          <a href="muda-library.html">Planning District maps</a> are the most accurate. For legal purposes, consult MUDA.
+        </div>
+      </div>
+    </section>
+
+    <!-- Map -->
+    <section class="panel" id="map">
+      <div class="panel-header">
+        <h2>Land Use Interactive Map</h2>
+        <div class="panel-actions">
+          <a id="btn-fullscreen" href="#" class="btn">Fullscreen</a>
+          <a class="btn" href="https://www.arcgis.com/home/item.html?id=e9b3bb25bec84146891ea47ca2ccb4c9" target="_blank" rel="noopener">Open on ArcGIS</a>
+        </div>
+      </div>
+
+      <div id="mapView" class="map-view" aria-label="ArcGIS map"></div>
+      <div class="map-help">Use the scroll-wheel to smoothly zoom, drag to pan, or the +/- buttons. Search is in the top-right of the map.</div>
+    </section>
+
+    <!-- Quick Links -->
+    <section class="panel" id="quick-links">
+      <div class="panel-header">
+        <h2>Quick Links</h2>
+      </div>
+
+      <div class="grid-4 ql-centered">
+        <a class="ql-card" href="#" data-title="LPA / Planning District Boundary" data-open="LPA / Planning District Boundary">
+          <span class="ql-label">LPA / Planning District Boundary</span>
+        </a>
+
+        <a class="ql-card" href="#" data-title="Proposed Land Use – Mysuru City" data-open="Proposed Land Use Mysuru City.pdf">
+          <span class="ql-label">Proposed Land Use – Mysuru City</span>
+        </a>
+
+        <a class="ql-card" href="#" data-title="Proposed Circulation – Mysuru City" data-open="Proposed Circulation Mysuru City.pdf">
+          <span class="ql-label">Proposed Circulation – Mysuru City</span>
+        </a>
+
+        <a class="ql-card" href="#" data-title="Zoning Map" data-open="Zoning Map.pdf">
+          <span class="ql-label">Zoning Map</span>
+        </a>
+      </div>
+
+      <p class="ql-note center" style="margin-top:14px">
+        To view each Planning District in detail (with full previews), check out the
+        <a href="muda-library.html"><strong>Master Plan Library</strong></a>.
+      </p>
+
+      <div class="panel-footer center">
+        <a class="btn" href="muda-library.html">Open Master Plan Library</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PDF modal -->
+  <div id="pdf-modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content" role="dialog" aria-modal="true">
+      <button class="modal-close" aria-label="Close">✕</button>
+      <iframe id="pdf-frame" title="PDF preview"></iframe>
+    </div>
+  </div>
+
+  <!-- ArcGIS JS API -->
+  <script type="module" src="https://js.arcgis.com/4.33/"></script>
+  <script type="module" src="muda.js"></script>
+</body>
+</html>
