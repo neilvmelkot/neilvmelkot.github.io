@@ -5,20 +5,31 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>neil melkot</title>
 
-<link rel="icon" type="image/svg+xml"
-  href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%234f46e5'/%3E%3Ctext x='50%25' y='50%25' dy='.04em' text-anchor='middle' dominant-baseline='middle' alignment-baseline='middle' font-family='Arial, Helvetica, sans-serif' font-size='42' font-weight='700' fill='%23ffffff'%3En%3C/text%3E%3C/svg%3E" />
-<link rel="icon" type="image/svg+xml" media="(prefers-color-scheme: dark)"
-  href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23111827'/%3E%3Ctext x='50%25' y='50%25' dy='.04em' text-anchor='middle' dominant-baseline='middle' alignment-baseline='middle' font-family='Arial, Helvetica, sans-serif' font-size='42' font-weight='700' fill='%236366f1'%3En%3C/text%3E%3C/svg%3E" />
-  <meta name="theme-color" content="#4f46e5" media="(prefers-color-scheme: light)">
-  <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)">
+  <!-- Favicon: centered "n" (light/dark) -->
+  <link rel="icon" type="image/svg+xml"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%234f46e5'/%3E%3Ctext x='50%25' y='50%25' dy='.04em' text-anchor='middle' dominant-baseline='middle' alignment-baseline='middle' font-family='Arial, Helvetica, sans-serif' font-size='42' font-weight='700' fill='%23ffffff'%3En%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" media="(prefers-color-scheme: dark)"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23111827'/%3E%3Ctext x='50%25' y='50%25' dy='.04em' text-anchor='middle' dominant-baseline='middle' alignment-baseline='middle' font-family='Arial, Helvetica, sans-serif' font-size='42' font-weight='700' fill='%236366f1'%3En%3C/text%3E%3C/svg%3E" />
+  <meta name="theme-color" content="#111827">
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,700&family=Host+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
   <link rel="stylesheet" href="style.css" />
+
+  <!-- Force dark-mode BEFORE paint to avoid white flash -->
+  <script>
+    // Always start dark
+    document.documentElement.classList.add('js-ready'); // helper flag if needed
+    document.body ? document.body.classList.add('dark-mode','preload') : null;
+    // If body isn't created yet, queue it
+    document.addEventListener('DOMContentLoaded', () => {
+      document.body.classList.add('dark-mode','preload');
+    }, { once: true });
+  </script>
 </head>
-<body>
+<body class="dark-mode preload">
   <!-- Animated tile background -->
   <canvas id="bg-canvas" aria-hidden="true"></canvas>
 
@@ -44,7 +55,7 @@
   <main>
     <section class="hero visible" id="intro">
       <div class="hero-img-container" title="Click to snap me back">
-        <img id="draggable-img" src="neilimage.jpg" alt="Neil Melkot" draggable="false" />
+        <img id="draggable-img" src="neilimage.jpg" alt="neil melkot" draggable="false" />
       </div>
       <h1>neil melkot</h1>
       <p class="subtitle">computer science undergraduate at rutgers university</p>
@@ -59,7 +70,7 @@
     </section>
 
     <section id="about">
-      <h2>about me</h2>
+      <h2>about Me</h2>
       <div class="card">
         <p>Hey, I'm Neil, a developer with experience in building and working with dynamic and innovative applications. I specialize in full-stack development, data analysis, and software engineering.</p>
         <h3>Education</h3>
@@ -67,11 +78,11 @@
           <li><strong>Rutgers, The State University of New Jersey</strong> — Bachelor of Science in Computer Science &amp; Minor in Cognitive Science (Expected Fall 2025), GPA: 3.66/4.0</li>
           <li><strong>Raritan Valley Community College</strong> — Associate of Science in Environmental Science (May 2023)</li>
         </ul>
-        <h3>professional experience</h3>
+        <h3>Professional Experience</h3>
         <ul>
           <li><strong>The Digital Group Inc</strong> — Software Engineer Intern (June 2024 – Aug. 2024): Developed scalable web applications using ASP.NET Core, React, C#, and CSS; updated the Edit Candidate feature for ZRG Partners' recruitment platform, enabling dynamic management of candidate details in the CRM.</li>
         </ul>
-        <h3>skills</h3>
+        <h3>Skills</h3>
         <ul>
           <li>Programming: C#, Java, JavaScript, Python, R, SQL, OCaml</li>
           <li>Web Development: HTML, CSS, React, ASP.NET Core</li>
@@ -126,24 +137,12 @@
         </div>
         <a href="https://github.com/neilvmelkot/WaiteProtected" target="_blank" class="btn">GitHub Repo</a>
       </article>
-      <article class="card">
-        <h3>Email Verification Bot</h3>
-        <p>Secure email-based authentication bot to streamline user onboarding on Discord servers.</p>
-        <div class="project-details">
-          <ul>
-            <li>Node.js bot leveraging MongoDB for storage</li>
-            <li>Automated email dispatch with templated verification links</li>
-            <li>Role assignment upon successful verification</li>
-          </ul>
-        </div>
-        <a href="https://neilthought.medium.com/email-verification-system-for-discord-bots-5254a46a67bc" target="_blank" class="btn">Read Article</a>
-      </article>
     </section>
   </main>
 
   <footer id="contact">
     <h2>contact</h2>
-    <p>feel free to reach out!</p>
+    <p>feel free to reach out!  </p>
     <div class="contact-links">
       <p><i class="fa-solid fa-envelope"></i> <a href="mailto:neil.melkot@rutgers.edu">neil.melkot@rutgers.edu</a></p>
       <p><i class="fa-brands fa-linkedin"></i> <a href="https://www.linkedin.com/in/neilmelkot/" target="_blank">linkedin.com/in/neilmelkot</a></p>
@@ -152,15 +151,16 @@
 
   <script src="script.js"></script>
   <script>
-    // Theme toggle
+    // Theme toggle: default dark, no initial flash. Remove preload once ready.
     document.addEventListener('DOMContentLoaded', () => {
       const toggle = document.querySelector('.switch .input');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      if (prefersDark) {
-        document.body.classList.add('dark-mode');
-        toggle.checked = true;
-      }
-      toggle.addEventListener('change', () => {
+      // Start checked since we're defaulting to dark
+      if (toggle) toggle.checked = true;
+
+      // Remove preload class after first frame to avoid any flashing transitions
+      requestAnimationFrame(() => document.body.classList.remove('preload'));
+
+      toggle?.addEventListener('change', () => {
         document.body.classList.toggle('dark-mode', toggle.checked);
       });
     });
